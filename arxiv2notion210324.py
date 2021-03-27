@@ -7,6 +7,7 @@
 
 import os
 from notion.client import NotionClient
+from notion.collection import NotionDate
 from notion.block import CollectionViewBlock, TextBlock
 
 import config
@@ -38,6 +39,7 @@ import re
 import requests
 from googletrans import Translator
 from time import sleep
+from datetime import datetime
  
 import arxiv
  # 検索ワード
@@ -101,7 +103,7 @@ for i in np.arange(2):
         row.url = url
         row.abstract_jp = abst_jpn
         row.abstract = abst
-        row.submitted_date = date
+        row.submitted_time = NotionDate(date)
         row.children.add_new(TextBlock, title=abst_jpn)
 
         sleep(20)
@@ -152,6 +154,8 @@ for i in np.arange(2):
         url = result.pdf_url
         title = result.title
         date = result.published[0:10]
+        date = datetime.strptime(date,"%Y-%m-%d")
+        # date = date.replace("-","/")
         abst = result.summary
         cat = result.category
 
