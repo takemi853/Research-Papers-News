@@ -96,15 +96,19 @@ for i in np.arange(2):
         print(df.iloc[1,1])
         
 #notionへの投稿
-        row = cv.collection.add_row()
-        row.name = title_jpn
-        row.author = author
-        row.category = cat
-        row.url = url
-        row.abstract_jp = abst_jpn
-        row.abstract = abst
-        row.submitted_time = NotionDate(date)
-        row.children.add_new(TextBlock, title=abst_jpn)
+        duplicated_title_row = cv.collection.get_rows(search=url) #投稿しようとしている内容が投稿済みでないかを確認(urlで判別)
+        print(len(duplicated_title_row))
+        if(len(duplicated_title_row)==0): #重複しなければNotion DBへ投稿
+            row = cv.collection.add_row()
+            row.name = title_jpn
+            row.author = author
+            row.category = cat
+            row.url = url
+            row.abstract_jp = abst_jpn
+            row.abstract = abst
+            row.title = title
+            row.submitted_time = NotionDate(date)
+            row.children.add_new(TextBlock, title=abst_jpn)
 
         sleep(20)
 
